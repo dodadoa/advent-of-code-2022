@@ -2,7 +2,9 @@ use std::collections::BinaryHeap;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 
-fn part1(reader: BufReader<File>) -> io::Result<()>  {
+// quiz 1
+
+fn quiz1_part1(reader: BufReader<File>) -> io::Result<()>  {
 
     let mut max: u32 = 0;
     let mut temp: u32 = 0;
@@ -25,7 +27,7 @@ fn part1(reader: BufReader<File>) -> io::Result<()>  {
     Ok(())
 }
 
-fn part2(reader: BufReader<File>) -> io::Result<()>  {
+fn quiz1_part2(reader: BufReader<File>) -> io::Result<()>  {
     let mut top_three = BinaryHeap::new();
     let mut temp: u32 = 0;
 
@@ -50,13 +52,153 @@ fn part2(reader: BufReader<File>) -> io::Result<()>  {
     Ok(())
 }
 
+// quiz 2
+
+fn quiz2_part1 (reader: BufReader<File>) -> io::Result<()> {
+
+    let mut total_score: u32 = 0;
+    for line in reader.lines() {
+        let l = line.unwrap();
+        let e = l.split(" ").collect::<Vec<&str>>();
+        match e[..] {
+            [a, "X"] => {
+                total_score = total_score + 1;
+                if a.eq("A") {
+                    total_score = total_score + 3;
+                }
+                if a.eq("B") {
+                    total_score = total_score + 0;
+                }
+                if a.eq("C") {
+                    total_score = total_score + 6;
+                }
+            },
+            [a, "Y"] => {
+                // Y is paper
+                total_score = total_score + 2;
+                
+                if a.eq("A") {
+                    total_score = total_score + 6;
+                }
+                if a.eq("B") {
+                    total_score = total_score + 3;
+                }
+                if a.eq("C") {
+                    total_score = total_score + 0;
+                }
+            },
+            [a, "Z"] => {
+                total_score = total_score + 3;
+                if a.eq("A") {
+                    total_score = total_score + 0;
+                }
+                if a.eq("B") {
+                    total_score = total_score + 6;
+                }
+                if a.eq("C") {
+                    total_score = total_score + 3;
+                }
+            },
+            [_, _] => println!("error"),
+            [_] => println!("error"),
+            [_, _, _, ..] => println!("error"),
+            [] => println!("error")
+        }
+    }
+
+    println!("{}", total_score);
+
+    Ok(())
+}
+
+fn quiz2_part2 (reader: BufReader<File>) -> io::Result<()> {
+
+    // X means you need to lose, 
+    // Y means you need to end the round in a draw, 
+    // and Z means you need to win. Good luck!"
+
+    let mut total_score: u32 = 0;
+    for line in reader.lines() {
+        let l = line.unwrap();
+        let e = l.split(" ").collect::<Vec<&str>>();
+        match e[..] {
+            // to lose
+            [a, "X"] => {
+                // rock
+                // choose scissors -> 3 + 0
+                if a.eq("A") {
+                    total_score = total_score + 3;
+                }
+                // paper
+                // chose rock -> 1 + 0
+                if a.eq("B") {
+                    total_score = total_score + 1;
+                }
+                // scissor
+                // choose paper -> 2 + 0
+                if a.eq("C") {
+                    total_score = total_score + 2;
+                }
+            },
+            // to draw
+            [a, "Y"] => {
+
+                // to draw -> + 3
+                total_score = total_score + 3;
+                // rock
+                // choose rock ->+ 1
+                if a.eq("A") {
+                    total_score = total_score + 1;
+                }
+                // paper
+                // choose paper -> + 2
+                if a.eq("B") {
+                    total_score = total_score + 2;
+                }
+                // scissors
+                // choose scissors -> + 3
+                if a.eq("C") {
+                    total_score = total_score + 3;
+                }
+            },
+            [a, "Z"] => {
+                // to win -> + 6
+                total_score = total_score + 6;
+                // rock
+                // choose paper -> + 2
+                if a.eq("A") {
+                    total_score = total_score + 2;
+                }
+                // paper
+                // choose scissors -> + 3
+                if a.eq("B") {
+                    total_score = total_score + 3;
+                }
+                // scissors
+                // choose rock -> + 1
+                if a.eq("C") {
+                    total_score = total_score + 1;
+                }
+            },
+            [_, _] => println!("error"),
+            [_] => println!("error"),
+            [_, _, _, ..] => println!("error"),
+            [] => println!("error")
+        }
+    }
+
+    println!("{}", total_score);
+
+    Ok(())
+}
+
 
 fn main() -> io::Result<()> {
-    let file_path = "./input/1.txt";
+    let file_path = "./input/2.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
-    part2(reader);
+    quiz2_part2(reader);
 
     Ok(())
 }
