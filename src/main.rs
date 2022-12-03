@@ -1,4 +1,4 @@
-use std::collections::BinaryHeap;
+use std::collections::{BinaryHeap, HashSet};
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 
@@ -193,12 +193,52 @@ fn quiz2_part2 (reader: BufReader<File>) -> io::Result<()> {
 }
 
 
+fn quiz3_part1(reader: BufReader<File>) -> io::Result<()> {
+    let alphabet: Vec<&str> = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").collect();
+
+    let mut dup: Vec<String> = vec![];
+    for line in reader.lines() {
+        let rucksack = line.unwrap();
+        let rucksack_size = rucksack.len();
+        let compartment_size = rucksack_size / 2;
+        let first_compartment = rucksack[0..compartment_size].to_owned();
+        let second_compartment = rucksack[compartment_size..rucksack_size].to_owned();
+
+        let first: HashSet<&str> = first_compartment.split("").into_iter().collect();
+        let second: HashSet<&str> = second_compartment.split("").into_iter().collect();
+
+        println!("{first:?} {second:?}");
+
+        for first_item in first {
+            if first_item.eq("") {
+                continue;
+            }
+            if second.contains(&first_item) {
+                dup.push(first_item.to_owned());
+            }
+        }
+    }
+
+    let mut sum: usize = 0;
+    for al in dup {
+        let found = alphabet.iter().find(|a| a.eq(&&al)).unwrap();
+        let found_index = alphabet.iter().position(|a| a.eq(&&al)).unwrap();
+        println!("{found} {found_index}");
+        sum = sum + found_index;
+    }
+
+    println!("{sum}");
+
+    Ok(())
+}
+
+
 fn main() -> io::Result<()> {
-    let file_path = "./input/2.txt";
+    let file_path = "./input/3.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
-    quiz2_part2(reader);
+    quiz3_part1(reader);
 
     Ok(())
 }
