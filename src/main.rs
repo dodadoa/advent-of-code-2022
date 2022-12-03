@@ -232,13 +232,59 @@ fn quiz3_part1(reader: BufReader<File>) -> io::Result<()> {
     Ok(())
 }
 
+fn quiz3_part2(reader: BufReader<File>) -> io::Result<()> {
+    let alphabet: Vec<&str> = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").collect();
+
+    let mut item_badge: Vec<String> = vec![];
+    let mut whole: Vec<Vec<String>> = vec![];
+    let mut group: Vec<String> = vec![];
+    for line in reader.lines() {
+        let rucksack = line.unwrap();
+        group.push(rucksack);
+        if group.len() == 3 {
+            whole.push(group);
+            group = vec![];
+        }
+    }
+
+    for each_group in whole {
+        let first: HashSet<&str> = each_group[0].split("").into_iter().collect();
+        let second: HashSet<&str> = each_group[1].split("").into_iter().collect();
+        let third: HashSet<&str> = each_group[2].split("").into_iter().collect();
+
+        for first_item in first {
+            if first_item.eq("") {
+                continue;
+            }
+            if second.contains(&first_item) {
+                if third.contains(&first_item) {
+                    item_badge.push(first_item.to_owned());
+                }
+            }
+        }
+    }
+
+
+    let mut sum: usize = 0;
+    for al in item_badge {
+        let found = alphabet.iter().find(|a| a.eq(&&al)).unwrap();
+        let found_index = alphabet.iter().position(|a| a.eq(&&al)).unwrap();
+        println!("{found} {found_index}");
+        sum = sum + found_index;
+    }
+
+    println!("{sum}");
+
+    Ok(())
+}
+
 
 fn main() -> io::Result<()> {
     let file_path = "./input/3.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
-    quiz3_part1(reader);
+    quiz3_part2(reader);
 
     Ok(())
 }
