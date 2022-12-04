@@ -278,13 +278,87 @@ fn quiz3_part2(reader: BufReader<File>) -> io::Result<()> {
     Ok(())
 }
 
+fn quiz4_part1(reader: BufReader<File>) -> io::Result<()> {
+    let mut total_cover_whole = 0;
+    for line in reader.lines() {
+        let section = line.unwrap();
+        let pairs: Vec<&str> = section.split(",").into_iter().collect();
+        let first_pair: Vec<&str> = pairs[0].split("-").into_iter().collect();
+        let second_pair: Vec<&str> = pairs[1].split("-").into_iter().collect();
+
+        let first_pair_begin = first_pair[0].parse::<i32>().unwrap();
+        let first_pair_end = first_pair[1].parse::<i32>().unwrap();
+
+        let second_pair_begin = second_pair[0].parse::<i32>().unwrap();
+        let second_pair_end = second_pair[1].parse::<i32>().unwrap();
+
+        // .2345678.  2-8
+        // ..34567..  3-7
+        if first_pair_begin <= second_pair_begin && first_pair_end >= second_pair_end {
+            total_cover_whole = total_cover_whole + 1;
+            continue;
+        }
+
+        // .....6...  6-6
+        // ...456...  4-6
+        if second_pair_begin <= first_pair_begin && second_pair_end >= first_pair_end {
+            total_cover_whole = total_cover_whole + 1;
+            continue;
+        }
+    }
+
+    println!("{total_cover_whole}");
+
+    Ok(())
+}
+
+fn quiz4_part2(reader: BufReader<File>) -> io::Result<()> {
+    let mut total_cover_whole = 0;
+    for line in reader.lines() {
+        let section = line.unwrap();
+        let pairs: Vec<&str> = section.split(",").into_iter().collect();
+        let first_pair: Vec<&str> = pairs[0].split("-").into_iter().collect();
+        let second_pair: Vec<&str> = pairs[1].split("-").into_iter().collect();
+
+        let first_pair_begin = first_pair[0].parse::<i32>().unwrap();
+        let first_pair_end = first_pair[1].parse::<i32>().unwrap();
+
+        let second_pair_begin = second_pair[0].parse::<i32>().unwrap();
+        let second_pair_end = second_pair[1].parse::<i32>().unwrap();
+
+        println!("{first_pair:?} {second_pair:?}");
+
+        //  case 1
+        //   2-4
+        //       6-8
+    
+        // ....567..  5-7
+        // .....6789  6-9
+        if first_pair_begin <= second_pair_begin && first_pair_end >= second_pair_begin {
+            total_cover_whole = total_cover_whole + 1;
+            continue;
+        }
+
+        // ......789  7-9
+        // ....567..  5-7
+        if second_pair_begin <= first_pair_begin && second_pair_end >= first_pair_begin { 
+            total_cover_whole = total_cover_whole + 1;
+            continue;
+        }
+    }
+
+    println!("{total_cover_whole}");
+
+    Ok(())
+}
+
 
 fn main() -> io::Result<()> {
-    let file_path = "./input/3.txt";
+    let file_path = "./input/4.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
-    quiz3_part2(reader);
+    quiz4_part2(reader);
 
     Ok(())
 }
