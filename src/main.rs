@@ -352,13 +352,18 @@ fn quiz4_part2(reader: BufReader<File>) -> io::Result<()> {
     Ok(())
 }
 
+fn quiz5_part1(reader: BufReader<File>) -> io::Result<()> {
+    
+
+    Ok(())
+}
 
 fn main() -> io::Result<()> {
     let file_path = "./input/4.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
-    quiz4_part2(reader);
+    quiz5_part1(reader);
 
     Ok(())
 }
