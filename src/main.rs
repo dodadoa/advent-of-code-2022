@@ -447,12 +447,62 @@ fn quiz5_part2(reader: BufReader<File>) -> io::Result<()> {
     Ok(())
 }
 
+fn quiz6_part1(reader: BufReader<File>) -> io::Result<()> {
+
+    for line in reader.lines() {
+        let unwrap = line.unwrap();
+        let iter: Vec<&str> = unwrap.split("").into_iter().skip(1).collect();
+        let i = iter.windows(4);
+        let mut index = 4;
+        for n in i {
+            let mut hash = HashSet::new();
+            for j in n {
+                hash.insert(j.to_string().to_owned());
+            }
+            if hash.len() == 4 {
+                println!("{hash:?}");
+                break;
+            }
+           
+            index = index + 1;
+        }
+        println!("{index}");
+    }   
+
+    Ok(())
+}
+
+fn quiz6_part2(reader: BufReader<File>) -> io::Result<()> {
+
+    for line in reader.lines() {
+        let unwrap = line.unwrap();
+        let iter: Vec<&str> = unwrap.split("").into_iter().skip(1).collect();
+        let i = iter.windows(14);
+        let mut index = 14;
+        for n in i {
+            let mut hash = HashSet::new();
+            for j in n {
+                hash.insert(j.to_string().to_owned());
+            }
+            if hash.len() == 14 {
+                println!("{hash:?}");
+                break;
+            }
+           
+            index = index + 1;
+        }
+        println!("{index}");
+    }   
+
+    Ok(())
+}
+
 fn main() -> io::Result<()> {
-    let file_path = "./input/5.txt";
+    let file_path = "./input/6.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
-    quiz5_part2(reader);
+    quiz6_part2(reader);
 
     Ok(())
 }
