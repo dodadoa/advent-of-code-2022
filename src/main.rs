@@ -1,4 +1,4 @@
-use std::collections::{BinaryHeap, HashSet};
+use std::collections::{BinaryHeap, HashSet, HashMap};
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 
@@ -353,13 +353,56 @@ fn quiz4_part2(reader: BufReader<File>) -> io::Result<()> {
 }
 
 fn quiz5_part1(reader: BufReader<File>) -> io::Result<()> {
-    
+    let mut map: HashMap<usize, Vec<String>> = HashMap::new();
+    for line in reader.lines() {
+        let unwrap = line.unwrap();
+        let stacks: Vec<&str> = unwrap.split("").into_iter().collect();
+        let command: Vec<&str> = unwrap.split(" ").into_iter().collect();
+
+        if command[0].eq("move") {
+            
+            let quantity = command[1].parse::<usize>().unwrap();
+            let from = command[3].parse::<usize>().unwrap();
+            let to = command[5].parse::<usize>().unwrap();
+
+            for _i in 0..quantity {
+                let vec = map.entry(from * 4 - 2).or_insert(vec![]);
+                let value = vec.pop().unwrap();
+                let to_vec = map.entry(to * 4 - 2).or_insert(vec![]);
+                to_vec.push(value);
+            }
+            
+            continue;
+        }
+
+        if unwrap.eq("") {
+            continue;
+        }
+        
+        for (i, item) in stacks.iter().enumerate() {
+            if let Ok(num) = item.parse::<i32>() {
+                let vec = map.entry(num as usize * 4 - 2).or_insert(vec![]);
+                vec.reverse();
+                continue;
+            }
+            // 2, 6, 10, 14, ... (+4)
+            if (i + 2) % 4 == 0 {
+                if item.to_string().eq(" ") {
+                    continue;
+                }
+                let vec = map.entry(i).or_insert(vec![]);
+                vec.push(item.to_string().to_owned());
+            }
+        }
+    }
+
+    println!("{map:?}");
 
     Ok(())
 }
 
 fn main() -> io::Result<()> {
-    let file_path = "./input/4.txt";
+    let file_path = "./input/5.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
