@@ -1,3 +1,4 @@
+use std::slice::Iter;
 use std::collections::{BinaryHeap, HashSet, HashMap};
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
@@ -497,12 +498,79 @@ fn quiz6_part2(reader: BufReader<File>) -> io::Result<()> {
     Ok(())
 }
 
+fn quiz7_part1(reader: BufReader<File>) -> io::Result<()> {
+    for line in reader.lines() {
+        let unwrap = line.unwrap();
+
+        // command operation
+        if unwrap.contains("$") {
+            // println!("{unwrap}");
+        }
+        println!("{unwrap}");
+    }
+
+    Ok(())
+}
+
+fn quiz13_part1(reader: BufReader<File>) -> io::Result<()> {
+    let lines: Vec<String> = reader.lines().collect::<Result<_, _>>().unwrap();
+    let chunks = lines.iter().as_slice().chunks(3);
+
+
+    #[derive(Debug)]
+    enum Value {
+        Number(i32),
+        List(Vec<Value>)
+    }
+
+    fn parsing(list: &mut Iter<&str>) -> Value {
+        let mut vec_value: Vec<Value> = vec![];
+
+        while let Some(s) = list.next() {
+            match s.to_owned() {
+                "[" => {
+                    vec_value.push(parsing(list));
+                },
+                "]" => {
+                    return Value::List(vec_value);
+                },
+                n => {
+                    vec_value.push(Value::Number(n.parse::<i32>().unwrap()));
+                }
+            }
+        }
+
+        return Value::List(vec_value);
+    }
+
+    // line looping
+    for first_second in chunks {
+        let first = first_second[0].clone();
+        let second = first_second[1].clone();
+
+        // skip first "[" and pop the "]"
+        let mut list_first: Vec<&str> = first.split("").into_iter().filter(|s| !s.to_owned().eq("") && !s.to_owned().eq(",")).skip(1).collect();
+        list_first.pop();
+
+        // skip first "[" and pop the "]"
+        let mut list_second: Vec<&str> = second.split("").into_iter().filter(|s| !s.to_owned().eq("") && !s.to_owned().eq(",")).skip(1).collect();
+        list_second.pop();
+
+        let parsed_first = parsing(&mut list_first.clone().iter());
+        let parsed_second = parsing(&mut list_second.clone().iter());
+        println!("{parsed_first:?}");
+        println!("{parsed_second:?}");
+    }
+
+    Ok(())
+}
+
 fn main() -> io::Result<()> {
-    let file_path = "./input/6.txt";
+    let file_path = "./input/test_13.txt";
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
 
-    quiz6_part2(reader);
+    quiz13_part1(reader);
 
     Ok(())
 }
